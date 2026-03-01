@@ -153,7 +153,7 @@
 import { ref, reactive, onMounted } from 'vue'
 import { Search } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { getKnowledgeList, createKnowledge, updateKnowledge, deleteKnowledge } from '../../../api'
+import { getKnowledgeList, createKnowledge, updateKnowledge, deleteKnowledge } from '@/api'
 
 const loading = ref(false)
 const submitting = ref(false)

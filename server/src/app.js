@@ -8,6 +8,7 @@ const knowledgeRouter = require('./modules/knowledge/router');
 const chatRouter = require('./modules/chat/router');
 const statsRouter = require('./modules/stats/router');
 const billingRouter = require('./modules/billing/router');
+const adminRouter = require('./modules/admin/router');
 
 // 中间件
 const { tenantMiddleware } = require('./middleware/tenant');
@@ -32,6 +33,7 @@ app.use('/api/knowledge', tenantMiddleware, authMiddleware, knowledgeRouter);
 app.use('/api/chat', tenantMiddleware, authMiddleware, chatRouter);
 app.use('/api/stats', tenantMiddleware, authMiddleware, statsRouter);
 app.use('/api/billing', tenantMiddleware, authMiddleware, billingRouter);
+app.use('/api/admin', tenantMiddleware, authMiddleware, adminRouter);
 
 // 错误处理
 app.use((err, req, res, next) => {

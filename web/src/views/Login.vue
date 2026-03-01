@@ -2,8 +2,9 @@
   <div class="login-page">
     <div class="glass-card">
       <div class="logo">
-        <h1>🤖 AI 客服</h1>
-        <p>SaaS 平台</p>
+        <div class="logo-icon">🤖</div>
+        <h1>智聊AI</h1>
+        <p>智能客服 SaaS 平台</p>
       </div>
       
       <el-form :model="form" @submit.prevent="handleLogin">
@@ -51,7 +52,7 @@ import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { Message, Lock } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
-import { login } from '../../api'
+import { login } from '@/api'
 
 const router = useRouter()
 const loading = ref(false)
@@ -108,10 +109,18 @@ const handleLogin = async () => {
   margin-bottom: 32px;
 }
 
+.logo-icon {
+  font-size: 64px;
+  margin-bottom: 8px;
+}
+
 .logo h1 {
   font-size: 32px;
-  font-weight: 600;
-  color: #1d1d1f;
+  font-weight: 700;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   margin-bottom: 8px;
 }
 

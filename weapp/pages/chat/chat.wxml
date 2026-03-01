@@ -1,0 +1,43 @@
+<!--pages/chat/chat.wxml-->
+<view class="chat-container">
+  <!-- 消息列表 -->
+  <scroll-view scroll-y class="messages" scroll-into-view="{{toView}}">
+    <block wx:for="{{messages}}" wx:key="id">
+      <view class="message {{item.role}}" id="msg-{{item.id}}">
+        <view class="avatar">
+          <image wx:if="{{item.role === 'assistant'}}" src="/images/robot.png" mode="aspectFill"/>
+          <view wx:else class="user-avatar">👤</view>
+        </view>
+        <view class="content">
+          <view class="bubble">{{item.content}}</view>
+          <view class="time">{{item.time}}</view>
+        </view>
+      </view>
+    </block>
+    
+    <!-- 正在输入 -->
+    <view wx:if="{{sending}}" class="message assistant">
+      <view class="avatar">🤖</view>
+      <view class="typing">
+        <view class="dot"></view>
+        <view class="dot"></view>
+        <view class="dot"></view>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 输入区域 -->
+  <view class="input-area">
+    <input 
+      class="input" 
+      value="{{inputValue}}" 
+      placeholder="请输入您的问题..." 
+      bindinput="onInput"
+      bindconfirm="sendMessage"
+      confirm-type="send"
+    />
+    <button class="send-btn" bindtap="sendMessage" disabled="{{sending || !inputValue}}">
+      发送
+    </button>
+  </view>
+</view>

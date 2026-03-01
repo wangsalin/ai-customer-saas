@@ -3,7 +3,7 @@
     <!-- 侧边栏 -->
     <aside class="sidebar">
       <div class="logo">
-        <h2>🤖 AI客服</h2>
+        <h2>🤖 智聊AI</h2>
       </div>
       <el-menu :default-active="activeMenu" router>
         <el-menu-item index="/">
@@ -53,7 +53,7 @@
         
         <div class="stat-card glass">
           <div class="stat-icon" style="background: #34C759;">
-            <Robot />
+            <Service />
           </div>
           <div class="stat-content">
             <div class="stat-value">{{ stats.today.aiAnswered }}</div>
@@ -110,8 +110,8 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { DataAnalysis, Collection, ChatDotRound, Coin, Setting, Robot, Star, Phone, TrendCharts } from '@element-plus/icons-vue'
-import { getDashboard } from '../../api'
+import { DataAnalysis, Collection, ChatDotRound, Coin, Setting, Service, Star, Phone, TrendCharts } from '@element-plus/icons-vue'
+import { getDashboard } from '@/api'
 
 const router = useRouter()
 const activeMenu = ref('/')

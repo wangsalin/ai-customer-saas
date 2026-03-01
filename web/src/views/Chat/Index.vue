@@ -114,8 +114,8 @@
             :class="['message', msg.role]"
           >
             <div class="avatar">
-              <img v-if="msg.role === 'assistant'" src="/robot.png" alt="AI" />
-              <img v-else-if="msg.role === 'agent'" src="/agent.png" alt="客服" />
+              <img v-if="msg.role === 'assistant'" alt="AI" />
+              <img v-else-if="msg.role === 'agent'" alt="客服" />
               <div v-else class="user-avatar">{{ msg.content?.charAt(0) }}</div>
             </div>
             <div class="content">
@@ -155,7 +155,7 @@
 <script setup>
 import { ref, reactive, onMounted, nextTick } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { getChatList, getChatDetail, transferChat, rateChat } from '../../../api'
+import { getChatList, getChatDetail, transferChat, rateChat } from '@/api'
 
 const loading = ref(false)
 const tableData = ref([])

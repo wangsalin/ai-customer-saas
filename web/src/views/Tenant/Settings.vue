@@ -49,7 +49,7 @@
       <div class="channels-grid">
         <div v-for="channel in channels" :key="channel.type" class="channel-card glass">
           <div class="channel-header">
-            <img :src="`/channels/${channel.type}.png`" :alt="channel.name" class="channel-icon" />
+            <img alt="channel.name" :alt="channel.name" class="channel-icon" />
             <div class="channel-info">
               <div class="name">{{ channel.name }}</div>
               <div class="status">

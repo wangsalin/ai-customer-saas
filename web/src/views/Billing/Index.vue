@@ -105,11 +105,11 @@
         <h4>选择支付方式</h4>
         <el-radio-group v-model="paymentMethod">
           <el-radio label="alipay">
-            <img src="/alipay.png" alt="支付宝" class="pay-icon" />
+            💰 支付宝
             支付宝
           </el-radio>
           <el-radio label="wechat">
-            <img src="/wechat.png" alt="微信" class="pay-icon" />
+            💬 微信支付
             微信支付
           </el-radio>
         </el-radio-group>
@@ -128,7 +128,7 @@
 import { ref, reactive, computed, onMounted } from 'vue'
 import { Check } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
-import { getPlan, getPlans, upgradePlan, getUsage } from '../../../api'
+import { getPlan, getPlans, upgradePlan, getUsage } from '@/api'
 
 const loading = ref(false)
 const paying = ref(false)

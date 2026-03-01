@@ -1,0 +1,12 @@
+{
+  "pages": [
+    "pages/chat/chat",
+    "pages/index/index"
+  ],
+  "window": {
+    "navigationBarTitleText": "智能客服",
+    "navigationBarBackgroundColor": "#007AFF",
+    "navigationBarTextStyle": "white"
+  },
+  "sitemapLocation": "sitemap.json"
+}

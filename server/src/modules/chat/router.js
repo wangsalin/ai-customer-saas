@@ -1,3 +1,4 @@
+// 完整对话服务 - 支持 AI 对话
 const express = require('express');
 const router = express.Router();
 const { chatWithLLM } = require('../../utils/llm');
@@ -10,21 +11,22 @@ const messages = new Map();
 router.post('/', async (req, res) => {
   try {
     const { message, conversationId, channel = 'web' } = req.body;
-    const userId = req.userId;
+    const userId = req.userId || 'anonymous';
+    const tenantId = req.tenantId || 'default';
     
     let conversation;
     
     // 获取或创建对话
     if (conversationId) {
       conversation = conversations.get(conversationId);
-      if (!conversation || conversation.tenantId !== req.tenantId) {
+      if (!conversation || conversation.tenantId !== tenantId) {
         return res.status(404).json({ error: '对话不存在' });
       }
     } else {
       conversationId = `conv_${Date.now()}`;
       conversation = {
         id: conversationId,
-        tenantId: req.tenantId,
+        tenantId,
         userId,
         channel,
         status: 'active',
@@ -44,8 +46,10 @@ router.post('/', async (req, res) => {
       createdAt: new Date()
     });
     
-    // 调用大模型
+    // 获取历史对话
     const history = getConversationHistory(conversationId);
+    
+    // 调用大模型
     const reply = await chatWithLLM(message, history);
     
     // 保存 AI 回复
@@ -82,15 +86,16 @@ router.post('/', async (req, res) => {
 // 获取对话列表
 router.get('/list', (req, res) => {
   const { page = 1, size = 20, status } = req.query;
+  const tenantId = req.tenantId || 'default';
   
   let list = Array.from(conversations.values())
-    .filter(c => c.tenantId === req.tenantId);
+    .filter(c => c.tenantId === tenantId);
   
   if (status) {
     list = list.filter(c => c.status === status);
   }
   
-  list.sort((a, b) => b.startedAt - a.startedAt);
+  list.sort((a, b) => new Date(b.startedAt) - new Date(a.startedAt));
   
   const total = list.length;
   const data = list.slice((page - 1) * size, page * size);
@@ -101,15 +106,16 @@ router.get('/list', (req, res) => {
 // 获取对话详情
 router.get('/:id', (req, res) => {
   const { id } = req.params;
+  const tenantId = req.tenantId || 'default';
   
   const conversation = conversations.get(id);
-  if (!conversation || conversation.tenantId !== req.tenantId) {
+  if (!conversation || conversation.tenantId !== tenantId) {
     return res.status(404).json({ error: '对话不存在' });
   }
   
   const conversationMessages = Array.from(messages.values())
     .filter(m => m.conversationId === id)
-    .sort((a, b) => a.createdAt - b.createdAt);
+    .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
   
   res.json({ code: 0, data: { conversation, messages: conversationMessages } });
 });
@@ -117,9 +123,10 @@ router.get('/:id', (req, res) => {
 // 转人工
 router.post('/transfer', (req, res) => {
   const { conversationId, reason } = req.body;
+  const tenantId = req.tenantId || 'default';
   
   const conversation = conversations.get(conversationId);
-  if (!conversation || conversation.tenantId !== req.tenantId) {
+  if (!conversation || conversation.tenantId !== tenantId) {
     return res.status(404).json({ error: '对话不存在' });
   }
   
@@ -133,9 +140,10 @@ router.post('/transfer', (req, res) => {
 // 评价
 router.post('/rating', (req, res) => {
   const { conversationId, rating, comment } = req.body;
+  const tenantId = req.tenantId || 'default';
   
   const conversation = conversations.get(conversationId);
-  if (!conversation || conversation.tenantId !== req.tenantId) {
+  if (!conversation || conversation.tenantId !== tenantId) {
     return res.status(404).json({ error: '对话不存在' });
   }
   
@@ -155,12 +163,12 @@ router.post('/rating', (req, res) => {
 function getConversationHistory(conversationId) {
   return Array.from(messages.values())
     .filter(m => m.conversationId === conversationId)
-    .sort((a, b) => a.createdAt - b.createdAt)
+    .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
     .map(m => ({ role: m.role, content: m.content }));
 }
 
 function checkShouldTransfer(message, reply) {
-  const triggers = ['投诉', '退款', '退货', '人工', '经理', '不满意', '赔偿', '太差'];
+  const triggers = ['投诉', '退款', '退货', '人工', '经理', '不满意', '赔偿', '太差', '投诉'];
   return triggers.some(t => message.includes(t));
 }
 

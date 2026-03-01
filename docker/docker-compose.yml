@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  api:
+    build: 
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - DB_HOST=mysql
+      - DB_USER=root
+      - DB_PASSWORD=root123
+      - DB_NAME=ai_customer_saas
+      - REDIS_HOST=redis
+      - JWT_SECRET=${JWT_SECRET:-your-secret-key}
+      - LLM_PROVIDER=${LLM_PROVIDER:-qwen}
+      - QWEN_API_KEY=${QWEN_API_KEY}
+    depends_on:
+      - mysql
+      - redis
+    restart: always
+
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    ports:
+      - "3001:80"
+    depends_on:
+      - api
+    restart: always
+
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: ai_customer_saas
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    restart: always
+
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    restart: always
+
+volumes:
+  mysql_data:
+  redis_data:
